@@ -1,10 +1,24 @@
 'use strict';
 
 const express = require('express');
-
-// eslint-disable-next-line new-cap
 const router = express.Router();
 
-// YOUR CODE HERE
+router.post('/users', (req, res, next) => {
+  const userToBeInserted = {
+    id: req.body.id,
+    first_name: req.body.firstName,
+    last_name: req.body.lastName,
+    email: req.body.email,
+    password:
+  }
+  knex('users').insert(userToBeInserted, '*').then( (insertedUser) => {
+    if (!insertedUser) {
+      return next();
+    }
+    res.send(camelizeKeys(insertedUser[0]))
+  }).catch((err) => {
+    next(err);
+  })
+})
 
 module.exports = router;
