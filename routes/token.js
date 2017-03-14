@@ -19,7 +19,8 @@ router.get('/token', (req, res, next) => {
 })
 
 router.post('/token', (req, res, next) => {
-  knex('users').where('email', req.body.email).then( (usersArray) => {
+  knex('users').where('email', req.body.email)
+  .then( (usersArray) => {
     let foundUser = usersArray[0];
     if (foundUser === undefined) {
       res.set('Content-Type', 'text/plain')
@@ -27,7 +28,7 @@ router.post('/token', (req, res, next) => {
     } else {
       bcrypt.compare(req.body.password, foundUser.hashed_password).then( (bingo) => {
 
-        const claim = { userId: 'toast' }; //this is our 'session'
+        const claim = { userId: foundUser.id }; //this is our 'session'
         const token = jwt.sign(claim, process.env.JWT_KEY, { //use this environment variable to sign the cookie
           expiresIn: '7 days'  // Adds an exp field to the payload
         });
@@ -46,7 +47,8 @@ router.post('/token', (req, res, next) => {
         };
 
         res.status(200).send(responseUser)
-      }).catch((err) => {
+      })
+      .catch((err) => {
         res.set('Content-Type', 'text/plain')
         res.status(400).send("Bad email or password")
       })
