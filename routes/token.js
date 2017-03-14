@@ -27,7 +27,7 @@ router.post('/token', (req, res, next) => {
     } else {
       bcrypt.compare(req.body.password, foundUser.hashed_password).then( (bingo) => {
 
-        const claim = { userId: 'toast' }; //this is our 'session'
+        const claim = { userId: foundUser.id }; //this is our 'session'
         const token = jwt.sign(claim, process.env.JWT_KEY, { //use this environment variable to sign the cookie
           expiresIn: '7 days'  // Adds an exp field to the payload
         });

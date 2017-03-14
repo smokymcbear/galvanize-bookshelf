@@ -51,7 +51,7 @@ router.post('/favorites', (req, res, next) => {
       const addedFavorite = {
         id: req.body.id,
         book_id: req.body.bookId,
-        user_id: 1, // assuming the user ID is 1
+        user_id: payload.userId, // assuming the user ID is 1
       }
       console.log('hello')
       return knex('favorites').insert(addedFavorite, '*')
